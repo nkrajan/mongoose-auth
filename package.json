@@ -1,7 +1,7 @@
 {
   "name": "mongoose-3x-auth",
   "description": "User authentication plugin for mongoose node.js orm",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "homepage": "https://github.com/panta/mongoose-auth/",
   "repository": {
     "type": "git",
@@ -19,7 +19,7 @@
   "dependencies": {
     "bcrypt": ">=0.5.0",
     "mongoose": ">=2.6.5",
-    "everyauth": ">=0.2.28",
+    "everyauth": "0.2.x",
     "mongoose-3x-types": ">=1.0.4"
   },
   "devDependencies": {
