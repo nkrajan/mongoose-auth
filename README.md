@@ -1,13 +1,18 @@
-mongoose-auth
-=============
+mongoose-3x-auth
+================
+
+This library is a fork of [mongoose-auth](http://github.com/bnoguchi/mongoose-auth), updated to work both with [mongoose](http://mongoosejs.com) 2.x and 3.x.
+
+It is meant to be used as an interim solution while waiting for the upstream version to be updated.
+
 
 User authentication plugin for mongoose node.js orm.
 
-mongoose-auth enables you to support authorization in any number of ways
+mongoose-3x-auth enables you to support authorization in any number of ways
 via authorization strategies.
 
 An authorization strategy is how you authorize your user. Currently
-mongoose-auth supports the following authorization strategies:
+mongoose-3x-auth supports the following authorization strategies:
 
 - `password`
 - `facebook`
@@ -16,7 +21,7 @@ mongoose-auth supports the following authorization strategies:
 - `instagram`
 - `google`
 
-mongoose-auth does 3 things:
+mongoose-3x-auth does 3 things:
 
 1. Schema decoration
 2. (optional) Drop in routing for 
@@ -31,7 +36,7 @@ independently of mongoose.
 
 ## Schema Decoration
 
-As you add successive authorization strategies, mongoose-auth at a bare
+As you add successive authorization strategies, mongoose-3x-auth at a bare
 minimum augments your schema with typed attributes corresponding to parameters
 related to your chosen authorization strategies. For example, if facebook is 
 one of your authorization strategies, then it will add attributes to your 
@@ -42,7 +47,7 @@ To decorate your schema:
 ```javascript
     var mongoose = require('mongoose')
       , Schema = mongoose.Schema
-      , mongooseAuth = require('mongoose-auth');
+      , mongooseAuth = require('mongoose-3x-auth');
     
     var UserSchema = new Schema({});
     UserSchema.plugin(mongooseAuth, {
@@ -59,19 +64,19 @@ strategy. Moreover, applications each handle in their own unique way how
 they want to respond to successful or failed logins (in addition to logout
 handling). If you are not using a 
 [connect](https://github.com/senchalabs/connect), then you will have to
-set all of this up yourself. In this case, mongoose-auth *only* provides
+set all of this up yourself. In this case, mongoose-3x-auth *only* provides
 you with Schema decoration.
 
 But, if you are building your app on top of
-[connect](https://github.com/senchalabs/connect), then mongoose-auth
+[connect](https://github.com/senchalabs/connect), then mongoose-3x-auth
 provides drop in solutions for you. Here is how you can get access
-to the routing that mongoose-auth provides. Not the "STEP X: ..."
+to the routing that mongoose-3x-auth provides. Not the "STEP X: ..."
 comments:
 
 ```javascript
     var mongoose = require('mongoose')
       , Schema = mongoose.Schema
-      , mongooseAuth = require('mongoose-auth');
+      , mongooseAuth = require('mongoose-3x-auth');
     
     var UserSchema = new Schema({})
       , User;
@@ -229,7 +234,7 @@ Here is an example, using 5 authorization strategies:
 
 ## Example
 
-There is an example app located in [./example](https://github.com/bnoguchi/mongoose-auth/tree/master/example).
+There is an example app located in [./example](https://github.com/bnoguchi/mongoose-3x-auth/tree/master/example).
 To run it:
 
     $ cd example
@@ -245,14 +250,14 @@ document.
 This can be done in the following way:
 
 The real magic lies with https://github.com/bnoguchi/everyauth/, and it should be more obvious once 
-I document everyauth more and document mongoose-auth's relationship to everyauth.
+I document everyauth more and document mongoose-3x-auth's relationship to everyauth.
 
 In `everyauth`'s design, every auth module is defined as a set of steps, which are exposed in such a way for 
 you to over-ride. The step that is of particular interest for this scenario is the `findOrCreateUser` step 
-required by every `everyauth` module.  `mongoose-auth` defines a default version of this `findOrCreateUser` 
+required by every `everyauth` module.  `mongoose-3x-auth` defines a default version of this `findOrCreateUser` 
 step for each `everyauth` auth module it supports (You can find these default definitions in 
 "lib/modules/#{moduleName}/everyauth.js" -- e.g., see 
-[.lib/modules/facebook/everyauth.js](https://github.com/bnoguchi/mongoose-auth/tree/master/lib/modules/facebook/everyauth.js)).
+[.lib/modules/facebook/everyauth.js](https://github.com/bnoguchi/mongoose-3x-auth/tree/master/lib/modules/facebook/everyauth.js)).
 
 So for example, this is how you would over-ride the default `findOrCreateUser` step for the 
 facebook module if you are using both the facebook and password module:
@@ -310,17 +315,17 @@ function assignFbDataToUser (user, accessTok, accessTokExtra, fbUser) {
 }
 ```
 
-As this is a common recipe, I plan on adding support for this into `everyauth` and `mongoose-auth`, so it's more drop-in, and developers do not have to add this custom code themselves. The intent is for common things like this to be invisible to the developer, so it just *works* *like* *magic*. So, in the near future, you won't have to over-ride the findOrCreateUser step every time you want this feature. This will be coming soon.
+As this is a common recipe, I plan on adding support for this into `everyauth` and `mongoose-3x-auth`, so it's more drop-in, and developers do not have to add this custom code themselves. The intent is for common things like this to be invisible to the developer, so it just *works* *like* *magic*. So, in the near future, you won't have to over-ride the findOrCreateUser step every time you want this feature. This will be coming soon.
 
 ## Recipe 2: Configuring Email or Phone to be your Login for the Password Module
 
-By default, `everyauth` and therefore `mongoose-auth` use the attribute `login` as the default attribute used for logging in
+By default, `everyauth` and therefore `mongoose-3x-auth` use the attribute `login` as the default attribute used for logging in
 with the password module.
 
 However, the need can arise to use a different attribute (such as email) that implies a different schema (use `email: String` instead of `login: String`)
 in addition to different validation assumptions (email validations are more strict that login handle validations).
 
-Luckily, `mongoose-auth` provide support for this out of the box. All you need to do is (look for the line labeled "THIS NEXT LINE IS THE ONLY ADDITION"):
+Luckily, `mongoose-3x-auth` provide support for this out of the box. All you need to do is (look for the line labeled "THIS NEXT LINE IS THE ONLY ADDITION"):
 
 ```javascript
 UserSchema.plugin(mongooseAuth, {
@@ -350,7 +355,7 @@ UserSchema.plugin(mongooseAuth, {
 });
 ```
 
-Automatically, `mongoose-auth` will use an `email` String attribute in your User schema
+Automatically, `mongoose-3x-auth` will use an `email` String attribute in your User schema
 instead of the default `login` String attribute. Moreover, it will automatically add in
 validation checks to make sure that the email is valid before registering a user through
 the registration process of the password module.
@@ -402,12 +407,12 @@ What this effectively does is:
    The registration form `<input>` `name`s should be, e.g., in the example above: 'phone', 
    'name[first]', and 'name[last]'.
 
-Please see [./example/server.js](https://github.com/bnoguchi/mongoose-auth/tree/master/example/server.js#L45)
+Please see [./example/server.js](https://github.com/bnoguchi/mongoose-3x-auth/tree/master/example/server.js#L45)
 for a live example.
 
 ## Recipe 4: Adding more attributes to your schema
 
-This one ha come up enough that it is here as a recipe, even though it is not specific to `mongoose-auth`. Suppose
+This one ha come up enough that it is here as a recipe, even though it is not specific to `mongoose-3x-auth`. Suppose
 you want to add a special attribute such as `roles: [String]` to your UserSchema. This is something that you can do
 using just `mongoose`
 
@@ -425,7 +430,7 @@ UserSchema.plugin(mongooseAuth, {
 
 ## Recipe 5: Customizing how you do password login authentication
 
-Currently, `mongoose-auth` does password authentication by login and password. Suppose you also want to authenticate
+Currently, `mongoose-3x-auth` does password authentication by login and password. Suppose you also want to authenticate
 by checking against an additional parameter, like `active`, which is a Boolean attribute on your UserSchema that
 indicates whether this user has been activated or not. Then you can modify the `authenticate` everyauth step in the
 following way:
@@ -495,7 +500,7 @@ User = mongoose.model('User');
 
 ## Recipe 6: Customizing logout handler
 
-This is a copy of instructions from `everyauth` and applied to `mongoose-auth`:
+This is a copy of instructions from `everyauth` and applied to `mongoose-3x-auth`:
 
 ```javascript
 // ...
